@@ -14,7 +14,8 @@ Options::Options(unsigned int num_particles,
 		 unsigned int max_num_levels,
 		 double lambda,
 		 double beta,
-		 unsigned int max_num_saves)
+		 unsigned int max_num_saves,
+                 std::string output_path)
 :num_particles(num_particles)
 ,new_level_interval(new_level_interval)
 ,save_interval(save_interval)
@@ -23,10 +24,12 @@ Options::Options(unsigned int num_particles,
 ,lambda(lambda)
 ,beta(beta)
 ,max_num_saves(max_num_saves)
+,output_path(output_path)
 ,sample_file("sample.txt")
 ,sample_info_file("sample_info.txt")
 ,levels_file("levels.txt")
 {
+        std::cout << output_path << std::endl;
 	assert(num_particles > 0 && new_level_interval > 0 &&
 		max_num_levels > 0 && lambda > 0. &&
 		beta >= 0.);
@@ -61,13 +64,14 @@ void Options::load(const char* filename)
 	fin>>lambda;		fin.ignore(1000000, '\n');
 	fin>>beta;		fin.ignore(1000000, '\n');
 	fin>>max_num_saves;		fin.ignore(1000000, '\n');
+        fin>>output_path;             fin.ignore(1000000, '\n');
 	fin>>sample_file;		fin.ignore(1000000, '\n');
 	fin>>sample_info_file;	fin.ignore(1000000, '\n');
 	fin>>levels_file;
 
-	if (sample_file.compare("#") == 0) sample_file = "sample.txt";
-	if (sample_info_file.compare("#") == 0) sample_info_file = "sample_info.txt";
-	if (levels_file.compare("#") == 0) levels_file = "levels.txt";
+	if (sample_file.compare("#") == 0) sample_file = output_path+"sample.txt";
+	if (sample_info_file.compare("#") == 0) sample_info_file = output_path+"sample_info.txt";
+	if (levels_file.compare("#") == 0) levels_file = output_path+"levels.txt";
 
 	fin.close();
 
@@ -86,6 +90,7 @@ void Options::print(std::ostream& out) const
 	out<<lambda<<' ';
 	out<<beta<<' ';
 	out<<max_num_saves<<' ';
+        out<<output_path<<' ';
 
 	out<<sample_file<<' ';
 	out<<sample_info_file<<' ';
@@ -102,6 +107,7 @@ void Options::read(std::istream& in)
 	in>>lambda;
 	in>>beta;
 	in>>max_num_saves;
+        in>>output_path;
 
 	in>>sample_file;
 	in>>sample_info_file;

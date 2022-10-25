@@ -27,6 +27,7 @@ class Options
 		unsigned int max_num_levels;
 		double lambda, beta;
 		unsigned int max_num_saves;
+                std::string output_path;
 
 		// Filenames
 		std::string sample_file;
@@ -42,7 +43,8 @@ class Options
 			unsigned int max_num_levels,
 			double lambda,
 			double beta,
-			unsigned int max_num_saves);
+			unsigned int max_num_saves,
+                        std::string output_path);
 
 		Options(const char* filename);
 		void load(const char* filename);
