@@ -19,14 +19,14 @@ def logdiffexp(x1, x2):
 
 def postprocess(temperature=1., numResampleLogX=1, plot=True, loaded=[], \
 			cut=0., save=True, zoom_in=True, compression_bias_min=1., verbose=True,\
-			compression_scatter=0., moreSamples=1., compression_assert=None, single_precision=False, rng_seed=None):
+			compression_scatter=0., moreSamples=1., compression_assert=None, single_precision=False, rng_seed=None, output_path="./"):
 
 	if rng_seed is not None:
 		rng.seed(rng_seed)
 
 	if len(loaded) == 0:
-		levels_orig = np.atleast_2d(my_loadtxt("levels.txt"))
-		sample_info = np.atleast_2d(my_loadtxt("sample_info.txt"))
+		levels_orig = np.atleast_2d(my_loadtxt(output_path + "levels.txt"))
+		sample_info = np.atleast_2d(my_loadtxt(output_path + "sample_info.txt"))
 	else:
 		levels_orig, sample_info = loaded[0], loaded[1]
 
@@ -203,7 +203,7 @@ def postprocess(temperature=1., numResampleLogX=1, plot=True, loaded=[], \
 		rows[i] = which + cut
 
     # Get header row
-	f = open("sample.txt", "r")
+	f = open(output_path + "sample.txt", "r")
 	line = f.readline()
 	if line[0] == "#":
 		header = line[1:]
@@ -211,7 +211,7 @@ def postprocess(temperature=1., numResampleLogX=1, plot=True, loaded=[], \
 		header = ""
 	f.close()
 
-	sample = loadtxt_rows("sample.txt", set(rows), single_precision)
+	sample = loadtxt_rows(output_path + "sample.txt", set(rows), single_precision)
 	posterior_sample = None
 	if single_precision:
 		posterior_sample = np.empty((N, sample["ncol"]), dtype="float32")
@@ -223,13 +223,13 @@ def postprocess(temperature=1., numResampleLogX=1, plot=True, loaded=[], \
 
 
 	if save:
-		np.savetxt("log_prior_weights.txt", logp_samples)
-		np.savetxt('weights.txt', w)
+		np.savetxt(output_path + "log_prior_weights.txt", logp_samples)
+		np.savetxt(output_path + 'weights.txt', w)
 		if single_precision:
-			np.savetxt("posterior_sample.txt", posterior_sample, fmt="%.7e",\
+			np.savetxt(output_path + "posterior_sample.txt", posterior_sample, fmt="%.7e",\
 													header=header)
 		else:
-			np.savetxt("posterior_sample.txt", posterior_sample,\
+			np.savetxt(output_path + "posterior_sample.txt", posterior_sample,\
 													header=header)
 
 	if plot:
