@@ -4,6 +4,7 @@ from __future__ import division
 
 cimport cython
 from libcpp.vector cimport vector
+from libcpp.string cimport string
 from cython.operator cimport dereference
 
 import time
@@ -27,7 +28,8 @@ cdef extern from "DNest4.h" namespace "DNest4":
             unsigned int max_num_levels,
             double lam,
             double beta,
-            unsigned int max_num_saves
+            unsigned int max_num_saves,
+            string output_path
         )
 
     cdef cppclass Sampler[T]:
@@ -87,6 +89,7 @@ def sample(
     unsigned int num_particles=1,
     unsigned int new_level_interval=10000,
     unsigned int thread_steps=1,
+    str output_path = "./",
 
     double lam=5.0,
     double beta=100.0,
@@ -154,7 +157,7 @@ def sample(
         raise ValueError("'lam' and 'beta' must be non-negative")
     cdef Options options = Options(
         num_particles, new_level_interval, num_per_step, thread_steps,
-        max_num_levels, lam, beta, 1
+        max_num_levels, lam, beta, 1, output_path
     )
 
     # Declarations.
